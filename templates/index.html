@@ -192,9 +192,7 @@
     <hr>
     <div class="dropdown">
       <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <strong>User</strong>
-      </a>
-      
+        <strong>User</strong></a>
       <ul class="dropdown-menu text-small shadow">
         <li>
         <button type="button" class="btn btn-outline-primary me-2">Login</button>
@@ -210,19 +208,22 @@
   </div>
 
   <div class="b-example-divider b-example-vr"></div>
+  
 
   <div class="content">
     <div class="container-sm">
-      <h4 class="mb-3">Querry: choose DNA of interest</h4>
-        <div class="form-group">
-          <label for="comment">Input DNA sequence</label>
-          <textarea class="form-control" rows="5",  style="max-width:100%;" id="DNA_querry"> </textarea>
-        </div>
+      <form action="/" method="POST" target="_blank"></form>
+        <h4 class="mb-3">Querry: choose DNA of interest</h4>
+          <div class="form-group">
+            <label for="comment">Input DNA sequence</label>
+            <textarea class="form-control" rows="5",  style="max-width:100%;" id="DNA_querry"> </textarea>
+          </div>
+        </form>  
     
         <div class="container-sm">
           <div class = "row">
             <div class="col">
-              <button type="button" class="btn btn-outline-primary me-2">Format</button>
+              <button type="button" class="btn btn-outline-primary me-2">Load</button>
               <button type="button" class="btn btn-outline-primary me-2">Clear</button>
             </div>
             
@@ -245,10 +246,10 @@
       {% endif %}
   </div>
 
-  
-  <div class="container">
+<hr class="hr hr-blurry" />
+  <div class="container-sm">
      <div class="row"> 
-        <h5 class="mb-3">Randome DNA generator</h5>
+        <h6 class="mb-3">Randome DNA generator</h6>
         <div class="col-8">
             <label for="leng_DNA" class="form-label"> Enter length of DNA:</label>
             <input type="text" class="form-control" id="DNA_querry_db" placeholder="lenth" required>
@@ -259,24 +260,30 @@
     </div>
   </div> 
  
-  <li><hr class="dropdown-divider"></li>
+<hr class="hr hr-blurry" />
 
-  <div class="row">
-  <h4>Download DNA sequence from database</h4>
-  <div class="col-6">
-    <label for ="DNA_db" class="form-label"> Enter DNA ID:</label>
-    <input type="text" class="form-control" id="DNA_querry_db" placeholder="sequience ID" required>
-   <div class = "col-4">
-    <button type="button" class="btn btn-outline-primary me-2">Generate</button>    
-   </div>  
-  </div>
-  </div>
-  
-  <li><hr class="dropdown-divider"></li>
-  <h4>Download DNA sequence from file</h4>
-  <div class = "col-4">
-    <button type="button" class="btn btn-outline-primary me-2">Download</button>    
-   </div> 
+
+  <div class="container">
+    <div class="row">
+      <div class = "col">
+        <div class ="row">
+          <h6 class ="mb-3">Download DNA sequence from database:</h6>
+          <div class="col">
+            <label for ="DNA_db" class="form-label"> Enter DNA ID:</label>
+            <input type="text" class="form-control" id="DNA_querry_db" placeholder="sequience ID" required>
+          </div>
+          <div class = "col">
+            <button type="button" class="btn btn-outline-primary me-2">Download</button>    
+          </div>  
+        </div>
+      </div>
+      <div class = "col">
+        <div class="row">
+          <div class = "col-8"><h6 class ="mb-3">Download DNA sequence from file:</h6></div>
+          <div class = "col-4"><button type="button" class="btn btn-outline-primary me-2">Download</button></div>         
+        </div>
+      </div>   
+    </div>
   </div>
 </main>
 
