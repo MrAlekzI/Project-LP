@@ -211,27 +211,22 @@
   
 
   <div class="content">
+    <form method="POST">
     <div class="container-sm">
-      <form action="/" method="POST" target="_blank"></form>
         <h4 class="mb-3">Querry: choose DNA of interest</h4>
           <div class="form-group">
             <label for="comment">Input DNA sequence</label>
-            <textarea class="form-control" rows="5",  style="max-width:100%;" id="DNA_querry"> </textarea>
-          </div>
-        </form>  
+            <textarea class="form-control" rows="5",  style="max-width:100%;" id="DNA_querry", name="dna_querry"> </textarea>
+          </div> 
     
         <div class="container-sm">
           <div class = "row">
             <div class="col">
-              <button type="button" class="btn btn-outline-primary me-2">Load</button>
-              <button type="button" class="btn btn-outline-primary me-2">Clear</button>
-            </div>
-            
-            <div class ="col">
-              <h6> Lenght of DNA: {{ querry_length }} </h6>
-            </div>
-          </div>
+              <button type="submit" class="btn btn-outline-primary me-2">Load</button></div>
+            <div class ="col"><h6> Lenght of DNA: {{ querry_length }} </h6></div>
+          </div>  
     </div>
+    </form>
   
       {% if remove_count > 0 %}
         <div class="alert alert-info">
