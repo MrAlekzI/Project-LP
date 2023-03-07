@@ -100,7 +100,7 @@ def poly_repeat(folded_seq, n_fold): #находит тип тракта, нач
 				letter.append(fr_list [i])
 				number_of_repeats+=1
 	
-		
+
 		if fr_list [-1] == fr_list [-2]:          #проверка конечного элемента
 			letter.append(fr_list [-1])
 			last_index.append (len(fr_list)-1)

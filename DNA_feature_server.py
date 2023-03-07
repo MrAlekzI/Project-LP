@@ -12,9 +12,9 @@ def index(): #обрабатываем главную страницу
         title = "DNA feature finder"
         if request.method == 'POST':   
             dna_querry = request.form.get('dna_querry') 
-            dna_querry_lengh=len(dna_querry) 
-            return render_template('index.html', page_title=title, querry_length = dna_querry_lengh, remove_count=0,)
-    except TypeError: #пока последовательность не введена почему то dna_qurry ==None
+            #dna_querry_lengh=len(dna_querry) 
+            return render_template('index.html', page_title=title, querry_length = 3, remove_count=0,)
+    except TypeError, IndexError: #пока последовательность не введена почему то dna_qurry ==None
         return render_template('index.html', page_title=title, querry_length = '', remove_count=0,)
          
 
