@@ -30,18 +30,20 @@ def random_seq():
 в прошлой версии не atcg удалялись из последовательности
 """
 
-seq = str(input().lower())  # приняли от пользователя строку
-counter = 0  # счетчик недопустимых символов
-seq_format = str("") # строка для отформатированной последовательности с удаленными недопустимыми символами
+seq = input().lower() # приняли от пользователя строку
+counter = 0 # счетчик недопустимых символов
+seq_format = [] # список для отформатированной строки, где удаляем недопустимые символы
 
 
 def format_seq():
     for symbol in seq:
         if symbol in dna_symbols:  # посимвольное сравнение элемента исходной строки и добавление в новую, если символ допустимый
-            seq_format += str(symbol)
+            seq_format.append(symbol)
         else:
             counter += 1  # если находим недопустимый символ
-
+            
+    seq_format = "".join(seq_format)  # отформатированный список преобразовываем в строку
+            
     if counter >= 1:
         showwarning(title="Warning!", message="Unavailable symbols were deleted")  # предупреждаем, что нашли и удалили недопустимые символы
 
