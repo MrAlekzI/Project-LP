@@ -5,13 +5,13 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 app = Flask(__name__)
 
 
-@app.route("/", methods=['GET'])
+@app.route("/get_querry")
 def index(): #обрабатываем главную страницу
     title = "DNA feature finder"
     return render_template('index.html', page_title=title, querry_length = '', remove_count = -1)
     
          
-@app.route("/", methods=['POST'])
+@app.route("/get_querry", methods=['POST'])
 def input_seq():
     try:
         title = "DNA feature finder"
