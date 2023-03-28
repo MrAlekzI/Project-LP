@@ -25,10 +25,7 @@ class Nucleotide:
 
     def __repr__(self):
         return f'The query contains {self.nuc_type} with length {self.length}'
-    
-    def validation(self):
-        if self.length <= 100000:
-            return True
+ 
         
     def type_check(self):
         #чтобы сообщить что введена последовательноть РНК, это не критично но иногда следует знать это
@@ -43,9 +40,6 @@ def id_parsing(id_seq:str) -> str:
     return dna_description
 
 def genebank_querry(id_seq:str) -> str:
-    #gb_handle = id_parsing(id_seq) #парсим и cсоздаем первый хэндл с описанием гена
-    #dna_obj = Nucleotide(id_seq, None)
-    #if dna_obj.validation():
     handle = Entrez.efetch(db="nucleotide", id=id_seq, rettype="fasta", retmode='text') #создается хэндлей который уже содержит информацию о последвоательности и с нип проводятся дальнейшие манипуляции
     record = SeqIO.read(handle, 'fasta')
     return str(record.seq)
