@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from random import randint, choice
+from homopol_tract import polytract_finder # поиск однобуквенных повторов
 
 
 app = Flask(__name__)
@@ -11,8 +12,9 @@ test_querry = { 'input_seq': None,
                 'is_random': 0,
                 'tandem_test':0,
                 'redirect_test':None,
-                'homopol_tract': 0, 
-                'homopol_tract_type': None} #словарь для тестирования функций 
+                'homopol_tract': None,
+                'homopol_tract_number': 0 
+                } #словарь для тестирования функций 
 
 @app.route("/")
 def index(): #обрабатываем главную страницу
@@ -32,13 +34,12 @@ def input_seq(): #запрос последовательности из окн�
 
 @app.route("/input_report", methods=['POST'])
 def input_report(): #обрабатываем кнопку показа введенной последоваьельности после ввода и форматирования
-    title = 'Input sequence after formating'
-    activate = int(request.form.get('import_report_hidden') )
-    if activate == 1: 
-        if (test_querry['input_seq'] is not None) or (test_querry['input_seq'] != ' ') or (test_querry['input_seq'] != ''): #условие как-то не арботает почему-то
-            return f"{test_querry['input_seq']}"     
-        else:
-            return 'No DNA sequence input' #почему то не работает, хотя когда ничего не вводится там сотит пробел (ord=32) 
+    title = 'Input sequence after formating' 
+    if (test_querry['input_seq'] is not None) or (test_querry['input_seq'] != ' ') or (test_querry['input_seq'] != '') or (ord(test_querry['input_seq']) != 32): #условие как-то не арботает почему-то
+    #все арвно почему то не хочет считвать пустой символ, надеюсь привязка функции форматирования поможет
+        return f"{test_querry['input_seq']}"     
+    else:
+        return 'No DNA sequence input' #почему то не работает, хотя когда ничего не вводится там сотит пробел (ord=32) 
 
 @app.route("/random_gen", methods=['POST'])
 def input_random(): #симуляция рандомной генерации, далее нужно подключать модуль
@@ -58,9 +59,7 @@ def input_random(): #симуляция рандомной генерации, �
 
 @app.route("/random_report", methods=['POST'])
 def random_report(): #обработки кнопки что за последоватльность сгенерировалася
-    if test_querry['random_seq'] is not None:
-        activate = int(request.form.get('random_report_hidden') )
-        if activate == 1:            
+    if test_querry['random_seq'] is not None:           
             return f"{test_querry['random_seq']}"       
     else:
         return 'No DNA generated'    
@@ -69,17 +68,16 @@ def random_report(): #обработки кнопки что за последо
 @app.route("/repeats")
 def repeat_page(): #страница работы с повторами
 
-    return render_template('repeats.html', page_title=title, tandem_found = test_querry['tandem_test'], tract_number = test_querry['homopol_tract'])
+    return render_template('repeats.html', tandem_found = test_querry['tandem_test'], tract_number = test_querry['homopol_tract_number'])
 
 @app.route("/repeats", methods=['POST'])
 def input_tandem(): #ввод длины повтора, его обработка и вывод
     try:
-        title = 'Repeats and content'
         tandem_length = request.form.get('tandem_length')
         test_querry['tandem_test'] = int(tandem_length)*10 #переменная для тестирвоания кнопки
-        return render_template('repeats.html', page_title=title, tandem_found = test_querry['tandem_test'])
+        return render_template('repeats.html', tandem_found = test_querry['tandem_test'])
     except (TypeError, IndexError, ValueError):
-        return render_template('repeats.html', page_title=title, tandem_found = '')
+        return render_template('repeats.html', tandem_found = '')
 
 '''   
 @app. route("/tandem_report")
@@ -90,8 +88,6 @@ def tandem_report_page(): #заготовка странциы с описани
 @app.route("/tandem_report", methods=['POST'])
 def tandem_report(): #обработка кнопки для показа найденых повторов (отчет уже готов когда произведен поиск
     if test_querry['tandem_test'] > 0:
-        activate = int(request.form.get('report_hidden') )
-        if activate == 1:  
             test_querry['redirect_test'] = test_querry['tandem_test']*10 #тестовый вывод обработки
             return f"{test_querry['redirect_test']}" #пока примитивный вывод       
     else:
@@ -99,14 +95,11 @@ def tandem_report(): #обработка кнопки для показа най
     
 @app. route("/poly_tract", methods=['POST'])
 def poly_tract_finder(): #кнопка поиска поиск гомопимерных трактов
-    activate = int(request.form.get('poly_tract_hidden') )
-    if activate == 1:
-    #взятие значения из словаря симулирует вызов модуля по поиску гомоповторов и создание записи в том же словаре симулирует формирование рпорта
-        test_querry['homopol_tract'] = randint(0, 5)
-        if  test_querry['homopol_tract']:
-           test_querry['homopol_tract_type'] = choice('atgc') 
+    #пока последовательнотсь будет браться из input как разнести последовательности из дургих источнико я пока не знаю
+    test_querry['homopol_tract'] = polytract_finder(test_querry['input_seq'])
+    test_querry['homopol_tract_number'] = len(test_querry['homopol_tract'])
+    return redirect(url_for('repeat_page'))
 
-        return redirect(url_for('repeat_page'))
 
 '''
 @app. route("/poly_tract_report")
@@ -115,12 +108,10 @@ def poly_tract_report_page(): #заготовка странциы с описа
 '''
 
 @app. route("/poly_tract_report", methods=['POST'])
-def poly_tract_report(): #кнопка поиска поиск гомопимерных трактов
-    activate = int(request.form.get('poly_tract_report_hidden'))
-    if test_querry['homopol_tract'] > 0:
-        if activate == 1:
-        #вызоп вызов тип тракта
-            return f'Type of homopolymer: {test_querry["homopol_tract_type"]}'
+def poly_tract_report(): #кнопка показа найденых повторов
+    if test_querry['homopol_tract'] is not None and test_querry['homopol_tract'] != {}:
+        #вызопв тип тракта
+            return f'{test_querry["homopol_tract"]}'
     else:
         return f'No homopolymer tracts'
 
