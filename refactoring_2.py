@@ -41,23 +41,13 @@ def fold (seq, n_fold):
 	                seq_temporary.append(fold) # на выходе получаем списки в списке
                     fold = ""
 		    
-            seq_split.append(seq_temporary) # каждый вложенный список равен одной проходке по циклу со сдвигом
-            
+            if seq_temporary != []:
+                seq_split.append(seq_temporary) # каждый вложенный список равен одной проходке по циклу со сдвигом
+           
     else:
         raise ValueError("Недопустимая длина повтора")
         
     return seq_split 
-			
-
-def clean_fold (seq_split):
-    seq_clean = []
-    
-    for seq in seq_split: # очищаем полученный список списков от пустых, костыль
-        if seq != []:
-            seq_clean.append(seq)
-
-    return seq_clean
-
 
 '''
 вторая функция - собственно поиск повтров среди все возможных элементов
