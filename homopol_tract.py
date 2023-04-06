@@ -2,33 +2,27 @@
 def polytract_finder(sequence: str) -> dict:
     tract_dict = {}
     tract_count = 0
-    tract_start = None
-    tract_end = None
-    for i in range(1, len(sequence)):
-        current_nucleotide = sequence[i - 1]
-        if sequence[i] == current_nucleotide and tract_start is None:
-            tract_start = i - 1
-        elif sequence[i] == current_nucleotide and tract_start is not None:
-            if i == len(sequence) - 1: # проверяем не является ли посдедним нуклеотидом
-                tract_end = i #записываем последный элемент как конец повтора
-            else:
-                continue
-        elif sequence[i] != current_nucleotide and tract_start is None:        
-            continue
-        elif sequence[i] != current_nucleotide and tract_start is not None: #поиск конечного элемента
-            tract_end = i - 1
-        if tract_start is not None and tract_end is not None: #определяем длину повтроа и если он больше 4 записываем в словарь где ключи - нмоер повтрора
-            if (tract_end - tract_start +1) > 4: 
-                tract_count += 1 
-                #каждый повтрор - слоарь hpt это сокращение homopolymer tract
-                tract_dict[tract_count] = {'hpt_start': tract_start+1,
-                                           'hpt_end': tract_end +1,
-                                           'hpt_lenght' : tract_end - tract_start + 1,
-                                           'hpt_type': current_nucleotide}
-            tract_start = None
-            tract_end = None
-    return tract_dict
+    repeat_lenght = 0
+    for index in range(1, len(sequence)): #не очень понимаю чем enumerate лучше range, почти такая же работа с индексами, к тому же не получается бртать со втрого элемента
+        if sequence[index] == sequence[index - 1]:
+            repeat_lenght += 1
+        else:
+            print(repeat_lenght)
+            if repeat_lenght >= 4:
+                tract_count += 1
+                tract_dict[tract_count] = {'hpt_start': index - repeat_lenght,
+                                           'hpt_end': index,
+                                           'hpt_lenght' : repeat_lenght + 1,
+                                           'hpt_type': sequence[index -1]}
+            repeat_lenght = 0
 
+#если после цикла ддлина повтора != 0 значит последвоательность кончается на повтор
+    if repeat_lenght >=4: 
+        tract_dict[tract_count+1] = {'hpt_start': len(sequence)- repeat_lenght,
+                                        'hpt_end': len(sequence)+1,
+                                        'hpt_lenght' : repeat_lenght + 1,
+                                        'hpt_type': sequence[-1]}
+    return tract_dict
 
 if __name__ == '__main__':
     test_1 = 'aaaagct' #длина повтора <5, повтро в начале
