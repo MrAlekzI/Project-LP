@@ -29,7 +29,7 @@ def index(): #обрабатываем главную страницу
 def input_seq(): #запрос последовательности из окна
     try:
         dna_query = request.form.get('dna_querry')
-        test_querry['input_seq'] = dna_query #здесь будет применена функция форматирования, запись в словарь
+        test_querry['input_seq'] = dna_query.strip() #здесь будет применена функция форматирования, запись в словарь
         dna_query_lengh = len(test_querry['input_seq'])
         return render_template('index.html', querry_length = dna_query_lengh, remove_count = test_querry['remove_count'])
     except (TypeError, IndexError):
@@ -38,8 +38,7 @@ def input_seq(): #запрос последовательности из окн�
 @app.route("/input_report", methods=['POST'])
 def input_report(): #обрабатываем кнопку показа введенной последоваьельности после ввода и форматирования
     title = 'Input sequence after formating' 
-    if (test_querry['input_seq'] is not None) or (test_querry['input_seq'] != ' ') or (test_querry['input_seq'] != '') or (ord(test_querry['input_seq']) != 32): #условие как-то не арботает почему-то
-    #все арвно почему то не хочет считвать пустой символ, надеюсь привязка функции форматирования поможет
+    if test_querry['input_seq']:
         return f"{test_querry['input_seq']}"     
     else:
         return 'No DNA sequence input' #почему то не работает, хотя когда ничего не вводится там сотит пробел (ord=32) 
