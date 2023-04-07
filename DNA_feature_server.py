@@ -135,7 +135,7 @@ def input_frame_gc():  #ввод длины окна поиска
 @app.route('/gc_content_min', methods=['POST'])
 def gc_min_report():  #ввод участков с минимальными GC
     if test_querry['gc_content'] is not None:
-        min_content = gc.min_gc_search(test_querry['gc_content']) #словарь с минимальным контентом
+        min_content = gc.gc_search(test_querry['gc_content'],min) #словарь с минимальным контентом
         return f'Minimal GC is {min_content["gc_content"]:.2f} within region(s): {" ".join(min_content["frame"])} bp'
     else:
         return 'Please calculate content before'
@@ -143,8 +143,8 @@ def gc_min_report():  #ввод участков с минимальными GC
 @app.route('/gc_content_max', methods=['POST'])
 def gc_max_report():  #ввод участков с минимальными GC
     if test_querry['gc_content'] is not None:
-        max_content = gc.max_gc_search(test_querry['gc_content']) #словарь с максимальным контентом
-        return f'Minimal GC is {max_content["gc_content"]:.2f} within region(s): {" ".join(max_content["frame"])} bp'
+        max_content = gc.gc_search(test_querry['gc_content'], max) #словарь с максимальным контентом
+        return f'Maximal GC is {max_content["gc_content"]:.2f} within region(s): {" ".join(max_content["frame"])} bp'
     else:
         return 'Please calculate content before'
 
