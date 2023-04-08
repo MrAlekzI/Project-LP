@@ -166,13 +166,13 @@
             </a>
           </li>  
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
+        <a href="/repeats#" class="nav-link active" aria-current="page">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
           Repeats
         </a>
       </li>
       <li>
-        <a href="/gc_content#" class="nav-link link-dark">
+        <a href="#" class="nav-link link-dark">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
           Content and free energy
         </a>
@@ -214,64 +214,52 @@
 
   <div class="content">
     <div class="container-sm">   
-      <h4 class="mb-3">Repeats</h4>
-      <h6 class="mb-3">Tandem repeats</h6>
-      <h7 class="mb-3">The tool searchs of non-nested tandem repeats with an element  lenght more than 3 bp and less than half of a DNA molecule</h7>
+      <h4 class="mb-3">GC content</h4>
       <div class = "row"><h7 h7 class="mb-3"></h7></div>
         <div class ="row">
           <div class="col-auto">  
           <form method="POST">          
             <div class="row">
               <div class="col-auto">
-                  <label for="comment">Enter lengh of a repeated element:</label></div>
+                  <label for="comment">Enter lengh of a frame for GC content:</label></div>
               <div class="col-auto">
-                  <input type="number" id="Tandem_length" name="tandem_length" class="form-control" /></div> 
+                  <input type="number" id="Frame_length" name="frame_length" class="form-control" /></div> 
               <div class="col-auto">
-                  <button type="submit" class="btn btn-outline-primary me-2">Find</button></div>
-              <div class ="col-auto"><h7> Repeat found: {{ tandem_found }} </h7></div>                          
+                  <button type="submit" class="btn btn-outline-primary me-2">Enter</button></div>
+              <div class ="col-auto"><h7> Total GC content: {{ total_GC_content }} </h7></div>                          
             </div>
           </form>
           </div>
+        </div>
+        <div class="row">
+        <h7 class="mb-3">Find and show DNA positoins with minimal and maximal GC content according to input frame size</h7>
           <div class = "col-auto">        
-          <form action ="/tandem_report" method="POST">
-            <div class = "row">    
+          <form action ="/gc_content_min" method="POST">
+                
               <div class="col-auto">
                 <input type="hidden" name="report_hidden" value="1">
-              <input type="submit" class="btn btn-outline-primary me-2" value="Report"></div>   
+              <input type="submit" class="btn btn-outline-primary me-2" value="Min"></div>   
           </form>
-          </div> 
-        </div>      
+          </div>
+          <div class = "col-auto">        
+            <form action ="/gc_content_max" method="POST">
+                  
+                <div class="col-auto">
+                  <input type="hidden" name="report_hidden" value="1">
+                <input type="submit" class="btn btn-outline-primary me-2" value="Max"></div>   
+            </form>
+            </div> 
+        </div> 
+        {% if total_GC_content != '' %}
+            <img src="{{ url_for('static', filename='images/gc_fig.jpg') }}" /> 
+        {% else %}
+            <div class="container"> </div> 
+        {% endif %}   
     </div>
   </div>
 
   
-<hr class="hr hr-blurry" />
-  <div class="container-sm"> 
-    <h6 class="mb-3">Homopolymer tracts (longer 4 bp) </h6>
-    <div class ="row">
-      <div class="col-auto">        
-        <form action ="/poly_tract" method="POST">
-          <div class="row">
-            <div class="col-auto">
-            <input type="hidden" name="poly_tract_hidden" value="1"></div>
-            <div class="col-auto">
-            <input type="submit" class="btn btn-outline-primary me-2" value="Find poly tract"></div>
-            <div class ="col-auto"><h7> Homopolymer tracts: {{ tract_number }}  </h7></div>
-          </div>
-        </form>
-      </div>
-      <div class="col-auto">
-      <form action ="/poly_tract_report" method="POST">
-        <div class="row">
-          <div class="col-auto">
-          <input type="hidden" name="poly_tract_report_hidden" value="1"></div>
-          <div class="col-auto">
-          <input type="submit" class="btn btn-outline-primary me-2" value="Report"></div>
-        </div>
-      </form>
-      </div>          
-    </div>    
-  </div> 
+ 
  
 <hr class="hr hr-blurry" />
 
