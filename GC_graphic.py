@@ -53,8 +53,8 @@ def draw_gc_content(sequence, frame):
     ax.plot(current_plot[0], current_plot[1])
     ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(5))
-    ax.set_xlabel('GC content, %', fontsize = 15)
-    ax.set_ylabel('DNA positnion, bp', fontsize = 15)
+    ax.set_xlabel('DNA positnion, bp', fontsize = 15)
+    ax.set_ylabel('GC content, %', fontsize = 15)
     gc_fig_clearance()
     fig.savefig(os.path.join(fig_path, 'gc_fig.jpg'), dpi=150)
     
