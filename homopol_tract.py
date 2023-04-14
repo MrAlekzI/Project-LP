@@ -24,6 +24,13 @@ def polytract_finder(sequence: str) -> dict:
                                         'hpt_type': sequence[-1]}
     return tract_dict
 
+def format_homopol(tract_dict):
+    format_seq = []
+    for item in tract_dict:
+        formated_tract = f'Tract #{item}: type: {tract_dict[item]["hpt_type"]}, length {tract_dict[item]["hpt_lenght"]}, start at {tract_dict[item]["hpt_start"]} nt, end at {tract_dict[item]["hpt_end"]} nt'
+        format_seq.append(formated_tract)
+    return format_seq
+
 if __name__ == '__main__':
     test_1 = 'aaaagct' #длина повтора <5, повтро в начале
     test_2 = 'aaaaagct' #длина повтора >=5, повтор в начале

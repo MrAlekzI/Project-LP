@@ -81,6 +81,7 @@
         -webkit-overflow-scrolling: touch;
       }
     </style>
+  
 
     
     <!-- Custom styles for this template -->
@@ -166,18 +167,18 @@
             </a>
           </li>  
       <li class="nav-item">
-        <a href="/repeats#" class="nav-link dark" aria-current="page">
+        <a href="#" class="nav-link active" aria-current="page">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
           Repeats
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link active">
+        <a href="/gc_content#" class="nav-link link-dark">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
-          Content
+          Content and free energy
         </a>
       </li>
-            
+      
     </ul>
     
   </div>
@@ -187,54 +188,31 @@
 
   <div class="content">
     <div class="container-sm">   
-      <h4 class="mb-3">GC content</h4>
+      <h4 class="mb-3">Found repeats</h4>
+      <h6 class="mb-3">Tandem repeats</h6>
       <div class = "row"><h7 h7 class="mb-3"></h7></div>
         <div class ="row">
-          <div class="col-auto">  
-          <form method="POST">          
-            <div class="row">
-              <div class="col-auto">
-                  <label for="comment">Enter lengh of a frame for GC content:</label></div>
-              <div class="col-auto">
-                  <input type="number" id="Frame_length" name="frame_length" class="form-control" /></div> 
-              <div class="col-auto">
-                  <button type="submit" class="btn btn-outline-primary me-2">Enter</button></div>
-              <div class ="col-auto"><h7> Total GC content: {{ total_GC_content }} </h7></div>                          
-            </div>
-          </form>
-          </div>
+          {% if repeats %}
+            {% for repeat in repeats %}
+            <p class="repeat">{{repeat}}</p>
+            {% endfor %}
+          {% endif %}
+        
         </div>
-        <div class="row">
-        <h7 class="mb-3">Find and show DNA positoins with minimal and maximal GC content according to input frame size</h7>
-          <div class = "col-auto">        
-          <form action ="/gc_content_min" method="POST">
-                
-              <div class="col-auto">
-                <input type="hidden" name="report_hidden" value="1">
-              <input type="submit" class="btn btn-outline-primary me-2" value="Min"></div>   
-          </form>
-          </div>
-          <div class = "col-auto">        
-            <form action ="/gc_content_max" method="POST">
-                  
-                <div class="col-auto">
-                  <input type="hidden" name="report_hidden" value="1">
-                <input type="submit" class="btn btn-outline-primary me-2" value="Max"></div>   
-            </form>
-            </div> 
-        </div> 
-        {% if total_GC_content != '' %}
-            <img src="{{ url_for('static', filename='images/gc_fig.jpg') }}" /> 
-        {% else %}
-            <div class="container"> </div> 
-        {% endif %}   
+        <hr class="hr hr-blurry" />
+        <h6 class="mb-3">Homopolymer tracts (longer 4 bp) </h6>
+          <div class ="row">
+            {% if homopol_tracts %}
+            {% for tract in homopol_tracts %}
+            <p class="repeat">{{tract}}</p>
+            {% endfor %}
+            {% endif %}
+        </div>       
     </div>
   </div>
 
   
- 
- 
-<hr class="hr hr-blurry" />
+
 
 </main>
 

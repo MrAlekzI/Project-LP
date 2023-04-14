@@ -172,57 +172,31 @@
       <li>
         <a href="/gc_content#" class="nav-link link-dark">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
-          Content and free energy
+          Content
         </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#gear-fill"/></svg>
-          Palindromes
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Quadruplexes
-        </a>
-      </li>
+      </li>    
       
     </ul>
-    <hr>
-    <div class="dropdown">
-      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <strong>User</strong></a>
-      <ul class="dropdown-menu text-small shadow">
-        <li>
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
-        </li>
-        <li><a class="dropdown-item" href="#">New project...</a></li>
-        <li><a class="dropdown-item" href="#">History</a></li>
-        <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li>
-      </ul>
-    </div>
+ 
   </div>
 
   <div class="b-example-divider b-example-vr"></div>
   
 
   <div class="content">
-    <form method="POST">
+    <form action = '/'  method="POST">
     <div class="container-sm">
         <h4 class="mb-3">Querry: choose DNA of interest</h4>
-          <div class="form-group">
+          <div class="row">
             <label for="comment">Input DNA sequence</label>
             <textarea class="form-control" rows="5",  style="max-width:100%;" id="DNA_querry", name="dna_querry"> </textarea>
           </div> 
-    </form>
+        </form>
         <div class="container-sm">
           <div class = "row">
             <div class="col-auto">
-              <button type="submit" class="btn btn-outline-primary me-2">Load</button></div>
+              <input type="submit" class="btn btn-outline-primary me-2" value = "Load"></div>
+            
             <div class ="col-auto"><h6> Lenght of DNA: {{ querry_length }} </h6></div>
           </div> 
           <div class = "col-auto">        
@@ -239,15 +213,41 @@
   
       {% if remove_count > 0 %}
         <div class="alert alert-info">
-            <strong>Info</strong> Non DNA symbols were removed!
+            <strong>Info: </strong> {{ remove_count }} Non DNA symbols were removed!
         </div>
-      {% elif remove_count ==0 %}
+      {% elif remove_count ==0 and querry_length != 0 %}
         <div class="alert alert-success">
-            <strong>Success!</strong> DNA sequence is loaded.
+            <strong>Success!</strong> DNA sequence is loaded in database
           </div>
       {% else %}
           <div class="container"> </div>
       {% endif %}
+      
+      {% if is_rna == 1 %}
+        <div class="alert alert-info">
+            <strong>Info: </strong>RNA symbol was detected! {{ is_rna }} uracil symbol was replaced.
+        </div>
+      {% elif is_rna >1 %}
+        <div class="alert alert-info">
+          <strong>Info: </strong>RNA symbols were detected! {{ is_rna }} uracil symbol were replaced.
+          </div>
+      {% else %}
+          <div class="container"> </div>
+      {% endif %}
+
+      {% if non_identified == 1 %}
+        <div class="alert alert-info">
+            <strong>Warning: </strong> {{ non_identified }} non-identified nucleotide was detected
+        </div>
+      {% elif non_identified > 1 %}
+        <div class="alert alert-info">
+          <strong> Warning: </strong> {{ non_identified }} non-identified nucleotides were detected
+        </div>
+      {% else %}
+          <div class="container"> </div>
+      {% endif %}
+
+
   </div>
 
 <hr class="hr hr-blurry" />
@@ -262,13 +262,13 @@
         <div class="form-group">
           <div class="row">
           <div class="col-auto">
-              <label for="comment">Enter lengh of DNA:</label>
+              <label for="comment">Enter lengh of DNA (10-100,000):</label>
           </div>
           <div class="col-auto">
               <input type="number" id="Random_length" name="random_length" class="form-control" />
           </div>
           <div class="col-auto">
-              <button type="submit" class="btn btn-outline-primary me-2">Generate</button></div>
+              <input type="submit" class="btn btn-outline-primary me-2" value="Generate"></div>
           </div>
       </div> 
   </form>
@@ -288,6 +288,10 @@
     <div class="alert alert-success">
       <strong>Success!</strong> DNA sequence is generated.
     </div>
+    {% elif is_random == -1 %}
+    <div class="alert alert-warning">
+      <strong>Attention: </strong> set length of DNA 10-100000
+    </div>
     {% else %}
       <div class="container"> </div>
     {% endif %}
@@ -301,16 +305,17 @@
     <div class="row">
       <div class = "col">
         <div class ="row">
-          <h6 class ="mb-3">Download DNA sequence from database:</h6>
-          <form action="/database_enter" method="POST">
-          <div class="col">
-            <label for ="DNA_db" class="form-label"> Enter DNA ID:</label>
-            <input type="text" class="form-control" id="DNA_querry_db" placeholder="sequience ID" required>
+          <h6 class ="mb-3">Download DNA sequence from Genebank:</h6>
+          <form action="/genebank_download" method="POST">
+          <div class="row">
+          <div class="col-auto">
+            <input type="text" class="form-control" id="Genebank_id" name="genebank_id" placeholder="Enter DNA ID" required>
           </div>
-          <div class = "col">
-            <button type="button" class="btn btn-outline-primary me-2">Download</button>    
+          <div class = "col-auto">
+            <input type="submit" class="btn btn-outline-primary me-2" value="Load">    
           </div>
-          </form>  
+          </form>
+          </div>  
         </div>
       </div>
       <div class = "col">
@@ -321,6 +326,22 @@
       </div>   
     </div>
   </div>
+  {% if is_genebank == 1 and not genebank_error  %}
+  <div class="alert alert-success">
+    <strong>Success! </strong> DNA from Genebank downloaded. </div>
+  {% elif is_genebank == 1 and genebank_error == 'NonDNAError' %}
+  <div class="alert alert-info">
+    <strong>Info:  </strong> The downoladed sequence is originaly RNA </div>
+  {% elif is_genebank == 0 and genebank_error == 'NoIDError'  %}
+  <div class="alert alert-warning">
+    <strong>Warning! </strong> Wrong acsession number! </div>
+  {% elif is_genebank == 0 and genebank_error == 'DNALenghtError' %}
+  <div class="alert alert-info">
+    <strong>Warning! </strong> The requested DNA is too long (>1 Mbase)  </div>
+  {% else %}
+  <div class="container"> </div>
+
+  {% endif %}  
 </main>
 
 
