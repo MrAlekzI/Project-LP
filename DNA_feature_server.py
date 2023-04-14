@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from random import randint, choice
 from homopol_tract import polytract_finder, format_homopol # поиск однобуквенных повторов
 import gc_graphic as gc
-from random_seq import random_seq
+import random_seq as rs
 from verification_seq import InputDNA
 import tandem_search as ts
-
+import genebank
 
 
 app = Flask(__name__)
@@ -14,7 +13,13 @@ test_querry = { 'input_seq': None,
                 'remove_count': -1,
                 'random_seq':None,
                 'is_random': 0,
-                'tandem_list':None,
+                'genbank_seq_id': None,
+                'genebank_name': None,
+                'genebank_length': None,
+                'genebank_seq': None,
+                'genebank_error':None,
+                'is_genebank': 0,
+                'tandem_list': None,
                 'homopol_tract': None,
                 'homopol_tract_number': 0,
                 'gc_frame_length': 0, 
@@ -25,7 +30,9 @@ test_querry = { 'input_seq': None,
 def index(): #обрабатываем главную страницу
     title = "DNA feature finder"
     return render_template('index.html', page_title=title, querry_length = '', remove_count = 0,
-                            is_random=test_querry['is_random'], is_rna = 0, non_identified = 0 )
+                            is_random=test_querry['is_random'], is_rna = 0,
+                            non_identified = 0, is_genebank = test_querry['is_genebank'],
+                            genebank_error = test_querry['genebank_error'] )
         
 
 @app.route("/", methods=['POST'])
@@ -52,14 +59,16 @@ def input_report(): #обрабатываем кнопку показа введ
 def input_random(): #симуляция рандомной генерации, далее нужно подключать модуль
     try:
         random_length = int(request.form.get('random_length'))
-        if random_length > 10:
-            test_output = random_seq(random_length)
-            test_querry['random_seq'] = test_output #запись в словарь
-            test_querry['is_random']  = 1 #для вывода сообщения что прошла генерация
-            return redirect(url_for('index'))
-        else: 
-            test_querry['is_random']  = 0 #убираем сообщение о генерации когда 0
-            return redirect(url_for('index'))
+        #if random_length > 10:
+        test_output = rs.random_seq(random_length)
+        print(test_output)
+        test_querry['random_seq'] = test_output #запись в словарь
+        test_querry['is_random']  = 1 #для вывода сообщения что прошла генерация
+        test_querry['genebank_error'] = None
+        return redirect(url_for('index'))
+    except rs.LengthError:
+        test_querry ['is_random'] = -1 #значит неправильное значение
+        return redirect(url_for('index'))
     except (TypeError, IndexError, ValueError):
         test_querry['is_random']  = 0 #убираем сообщение о генерации если кликнули с пустым полем
         return redirect(url_for('index'))
@@ -71,6 +80,36 @@ def random_report(): #обработки кнопки что за последо
             return f"{test_querry['random_seq']}"       
     else:
         return 'No DNA generated'    
+
+
+@app.route('/genebank_download', methods=['POST'])
+def genebank_download(): #запрос для поиска в genbank
+    try:
+        genebank_querry = str(request.form.get('genebank_id')).strip()
+        nucleotide_querry = genebank.Nucleotide(genebank_querry)
+        test_querry['genebank_length'] = nucleotide_querry.length
+        test_querry['genbank_seq_id'] = genebank_querry
+        test_querry['genebank_name'] = nucleotide_querry.dna_name
+        test_querry['genebank_seq'] = nucleotide_querry.sequence
+        test_querry['is_genebank'] = 1
+        try:
+            nucleotide_querry.type_check()
+            return redirect(url_for('index'))
+        except genebank.NonDNAError:
+            test_querry['genebank_error'] = 'NonDNAError'
+            return redirect(url_for('index'))
+    except genebank.NoIDError:
+        test_querry['is_genebank'] = 0
+        test_querry['genebank_error'] = 'NoIDError'
+        return redirect(url_for('index'))
+    except genebank.DNALengthError:
+        test_querry['is_genebank'] = 0
+        test_querry['genebank_error'] = 'DNALenghtError'
+        return redirect(url_for('index'))
+    except genebank.NonDNAError:
+            test_querry['genebank_error'] = 'NonDNAError'
+            return redirect(url_for('index'))
+    
 
 
 @app.route("/repeats")
